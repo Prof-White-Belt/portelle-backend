@@ -73,13 +73,10 @@ export const signIn = async (req, res) => {
       return res.status(401).json({ err: "Invalid credentials." });
     }
 
-    // Construct the payload
     const payload = { username: user.username, _id: user._id, city: user.city };
 
-    // Create the token, attaching the payload
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
 
-    // Send the token instead of the message
     res.status(200).json({ token });
   } catch (err) {
     res.status(500).json({ err: err.message });
