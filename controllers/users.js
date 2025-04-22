@@ -41,13 +41,14 @@ export const signUp = async (req, res) => {
 
     const user = await User.create({
       username: req.body.username,
+      city: req.body.city,
       hashedPassword: bcrypt.hashSync(
         req.body.password,
-        Number(process.env.SALT_ROUNDS)
+        Number(process.env.SALT_ROUNDS),
       ),
     });
 
-    const payload = { username: user.username, _id: user._id };
+    const payload = { username: user.username, _id: user._id, city: user.city };
 
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
 
@@ -73,7 +74,7 @@ export const signIn = async (req, res) => {
     }
 
     // Construct the payload
-    const payload = { username: user.username, _id: user._id };
+    const payload = { username: user.username, _id: user._id, city: user.city };
 
     // Create the token, attaching the payload
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
