@@ -7,7 +7,7 @@ mongoose.connect(process.env.MONGODB_URI).catch((err) => {
     console.log(`Error connection to MongoDB: ${err.message}`)
 })
 
-mongoose.connection.on("disconnect", () => {
+mongoose.connection.on("disconnected", () => {
     console.log("Disconnected from DB");
 } )
 
@@ -16,4 +16,4 @@ mongoose.connection.on("error", (err) => {
 
 })
 
-export default mongoose.connect;
+export default mongoose.connection;
