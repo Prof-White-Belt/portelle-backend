@@ -4,11 +4,8 @@ const eventSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String },
   date: { type: String, required: true },
-  location: { type: String, required: true },
   city: { type: String, required: true },
-  creator: { type: mongoose.Schema.Types.ObjectId, ref: "users", required: true },
-}, {
-  timestamps: true
+  creator: { type: String, required: true },
 });
 
 

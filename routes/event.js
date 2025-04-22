@@ -6,9 +6,9 @@ const router = Router();
 
 // Routes
 router.get("/", controllers.getAllEvents);
-router.get("/:id", controllers.getEventById);
+router.get("/:eventId", controllers.getEventById);
 router.post("/", verifyToken, controllers.createEvent);
-router.put("/:id", verifyToken, controllers.updateEvent);
-router.delete("/:id", verifyToken, controllers.deleteEvent);
+router.put("/:eventId", verifyToken, controllers.updateEvent);
+router.delete("/:eventId", verifyToken, controllers.deleteEvent);
 
 export default router;
