@@ -55,7 +55,7 @@ export const updateEvent = async (req, res) => {
             throw new Error("Event not found.");
         }
 
-        res.status(200).json(updateEvent)
+        res.status(200).json(updatedEvent)
     } catch (error){
         if (res.statusCode === 404) {
             res.json({ error: error.message });
@@ -65,10 +65,23 @@ export const updateEvent = async (req, res) => {
     }
 };
 
-export const deleteEvent = (req, res) => {
+export const deleteEvent = async (req, res) => {
     try {
+        const { eventId } = req.params;
 
+        const deletedEvent = await Event.findByIdAndDelete(eventId);
+
+        if (!deletedEvent){
+            res.status(404);
+            throw new Error("Event not found.");
+        }
+
+        res.status(200).json(deletedEvent);
     } catch (error){
-        
+        if (res.statusCode === 404) {
+            res.json({ error: error.message });
+          } else {
+            res.status(500).json({ error: error.message });
+          }
     }
 };
