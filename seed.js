@@ -1,10 +1,8 @@
 import mongoose from "mongoose";
-import db from "./connection.js";
-import Event from "../models/event.js";
+import db from "./db/connection.js";
+import Event from "./models/event.js";
 import "dotenv/config";
 
-// Optional: Replace with actual user IDs from your DB
-const sampleUserId = new mongoose.Types.ObjectId();
 
 const seedEvents = async () => {
   try {
@@ -16,24 +14,21 @@ const seedEvents = async () => {
         description: "Unwind with a gentle vinyasa flow.",
         date: new Date("04/01/2025"),
         city: "New York",
-        creator: sampleUserId,
-        attendees: []
+        creator: "Jon",
       },
       {
         title: "Food Crawl",
         description: "Taste the best food around town with fellow foodies.",
         date: new Date("03/12/2025"),
         city: "New York",
-        creator: sampleUserId,
-        attendees: []
+        creator: "Stella",
       },
       {
         title: "Coding + Matcha Meetup",
         description: "Coworking and networking session.",
         date: new Date("03/22/2015"),
         city: "New York",
-        creator: sampleUserId,
-        attendees: []
+        creator: "Jon",
       }
     ];
 
