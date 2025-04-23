@@ -1,6 +1,5 @@
 import Event from "../models/event.js";
 import User from "../models/user.js";
-import jwt from "jsonwebtoken";
 
 export const getAllEvents = async (req, res) => {
     try {
@@ -29,7 +28,7 @@ export const createEvent = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
         
-        const event = Event.create({
+        const event = await Event.create({
             title: req.body.title,
             date: req.body.date,
             city: req.body.city,
@@ -37,10 +36,13 @@ export const createEvent = async (req, res) => {
             creator: user.username,
         })
 
-        res.status(201).json({ event })
+        user.createdEvents.push(event._id);
+        await user.save();
+
+        res.status(201).json({ event: event })
 
     } catch (error){
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
     }
 };
 
