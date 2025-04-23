@@ -1,5 +1,6 @@
 import "dotenv/config";
 import User from "../models/user.js";
+import Event from "../models/event.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -82,3 +83,34 @@ export const signIn = async (req, res) => {
     res.status(500).json({ err: err.message });
   }
 };
+
+export const interestedEvent = async (req, res) => {
+  try{
+    const user = await User.findById(req.user._id);
+    const interestedEvent = await Event.findById(req.params.eventId);
+
+    if(!interestedEvent){
+      return res.status(404).json({ error: "Event not found."});
+    }
+
+    user.createdEvents.forEach( (event) => {
+      if(event.toString() === req.params.eventId){
+        return res.status(403).json({ error: "Cannot add an event you have created."})
+      }
+    })
+
+    user.interestedEvents.forEach( (event) => {
+      if(event.toString() === req.params.eventId){
+        return res.status(403).json({ error: "Already added this event."})
+      }
+    })
+
+    user.interestedEvents.push(interestedEvent._id);
+    await user.save();
+
+    res.status(200).json({ interestedEvent: interestedEvent});
+
+  }catch (error){
+    res.status(500).json({error: error.message});
+  }
+}
