@@ -85,7 +85,7 @@ export const signIn = async (req, res) => {
 };
 
 export const interestedEvent = async (req, res) => {
-  try{
+  try {
     const user = await User.findById(req.user._id);
     const interestedEvent = await Event.findById(req.params.eventId);
 
@@ -95,13 +95,14 @@ export const interestedEvent = async (req, res) => {
 
     user.createdEvents.forEach( (event) => {
       if(event.toString() === req.params.eventId){
-        return res.status(403).json({ error: "Cannot add an event you have created."})
+        throw new Error("Cannot add an event you have created.")
       }
     })
 
+
     user.interestedEvents.forEach( (event) => {
       if(event.toString() === req.params.eventId){
-        return res.status(403).json({ error: "Already added this event."})
+        throw new Error("Already added this event.")
       }
     })
 
@@ -109,8 +110,7 @@ export const interestedEvent = async (req, res) => {
     await user.save();
 
     res.status(200).json({ interestedEvent: interestedEvent});
-
-  }catch (error){
+  } catch (error){
     res.status(500).json({error: error.message});
   }
 }
