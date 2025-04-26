@@ -24,7 +24,19 @@ export const getUser = async (req, res) => {
   }
 };
 
-export const 
+export const showUserEvents = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate({ path: 'interestedEvents', populate: {path: 'creator', select: 'username _id'}});
+    const userCreatedEvents = await Event.find({ creator: req.user._id})
+
+    // TBU: Add error handling
+
+    res.json({user, userCreatedEvents});
+  } catch (error) {
+    res.status(500).json({ err: error.message });
+  }
+}
+
 
 export const signUp = async (req, res) => {
   try {
@@ -91,11 +103,12 @@ export const interestedEvent = async (req, res) => {
       return res.status(404).json({ error: "Event not found." });
     }
 
-    user.createdEvents.forEach((event) => {
-      if (event.toString() === req.params.eventId) {
-        throw new Error("Cannot add an event you have created.");
-      }
-    });
+    //  TBU: Refactor below - check if creator is the req user
+    // user.createdEvents.forEach( (event) => {
+    //   if(event.toString() === req.params.eventId){
+    //     return res.status(403).json({ error: "Cannot add an event you have created."})
+    //   }
+    // })
 
     user.interestedEvents.forEach((event) => {
       if (event.toString() === req.params.eventId) {
