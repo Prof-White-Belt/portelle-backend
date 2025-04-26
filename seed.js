@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import db from "./db/connection.js";
 import Event from "./models/event.js";
 import User from "./models/user.js"
