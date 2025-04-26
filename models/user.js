@@ -4,13 +4,10 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   city: {type: String, required: true},
   hashedPassword: { type: String, required: true },
-  createdEvents: [{ 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "Event" }],
   interestedEvents: [{ 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: "Event" 
-    } ]
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "events" 
+  }]
 });
 
 userSchema.set("toJSON", {

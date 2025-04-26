@@ -25,19 +25,14 @@ export const getEventById = async (req, res) => {
 };
 
 export const createEvent = async (req, res) => {
-    try {
-        const user = await User.findById(req.user._id);
-        
+    try {        
         const event = await Event.create({
             title: req.body.title,
             date: req.body.date,
             city: req.body.city,
             description: req.body.description,
-            creator: user.username,
+            creator: req.user._id,
         })
-
-        user.createdEvents.push(event._id);
-        await user.save();
 
         res.status(201).json({ event: event })
 

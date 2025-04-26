@@ -5,6 +5,7 @@ import verifyToken from "../middleware/verifyToken.js";
 const router = Router();
 
 router.get("/", verifyToken, controllers.getUsers);
+router.get("/user-events", verifyToken, controllers.showUserEvents)
 router.get('/:userId', verifyToken, controllers.getUser);
 router.post("/sign-up", controllers.signUp);
 router.post("/sign-in", controllers.signIn);

@@ -2,16 +2,24 @@ import mongoose from "mongoose";
 import db from "./db/connection.js";
 import Event from "./models/event.js";
 import User from "./models/user.js"
+import bcrypt from "bcrypt";
 import "dotenv/config";
 
 
 const seedEvents = async () => {
   try {
     await Event.deleteMany(); // Clear existing data
+    await User.deleteMany();
 
-    const victoria = await User.findById("6809113bbe3c990d0cc3990d");
-    const stella = await User.findById("68090cdc9be747d64c1763e3");
-    const jon = await User.findById("68090e459be747d64c1763e7");
+    const victoria = await User.create({
+      username: "Victoria",
+      city: "NYC",
+      hashedPassword: bcrypt.hashSync(
+        "victoria",
+        Number(process.env.SALT_ROUNDS),
+      ),
+      interestedEvents: []
+    });
 
     const events = [
       {
@@ -19,32 +27,25 @@ const seedEvents = async () => {
         description: "Unwind with a gentle vinyasa flow.",
         date: new Date("04/01/2025"),
         city: "New York",
-        creator: victoria.username,
+        creator: victoria,
       },
       {
         title: "Food Crawl",
         description: "Taste the best food around town with fellow foodies.",
         date: new Date("03/12/2025"),
         city: "New York",
-        creator: stella.username,
+        creator: victoria,
       },
       {
         title: "Coding + Matcha Meetup",
         description: "Coworking and networking session.",
         date: new Date("03/22/2015"),
         city: "New York",
-        creator: jon.username,
+        creator: victoria,
       }
     ];
 
-    const createdEvents = await Event.insertMany(events);
-
-    victoria.createdEvents.push(createdEvents[0]._id);
-    await victoria.save();
-    stella.createdEvents.push(createdEvents[1]._id);
-    await stella.save();
-    jon.createdEvents.push(createdEvents[2]._id);
-    await jon.save();
+    await Event.insertMany(events);
 
     console.log("✨ Events successfully seeded!");
   } catch (error) {
