@@ -4,18 +4,20 @@ import cors from "cors";
 import routes from "./routes/index.js";
 
 const app = express();
-const PORT = process.env.porrt || 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 
+
 app.use("/api", routes);
 
 db.on("connected", () => {
-    console.clear();
-    console.log("Connected to MongoDB");
-})
+  console.clear();
+  console.log("✅ Connected to MongoDB");
+  console.log(`🚀 Backend is running at: http://localhost:${PORT}`);
+});
 
 app.listen(PORT, () => {
-    console.log("Express server running on port" + PORT);
-})
+  console.log(`🚀 Express server listening on port ${PORT}`);
+});
