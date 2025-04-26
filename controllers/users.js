@@ -24,6 +24,8 @@ export const getUser = async (req, res) => {
   }
 };
 
+export const 
+
 export const signUp = async (req, res) => {
   try {
     console.log("Sign-up attempt for:", req.body.username);
