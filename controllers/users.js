@@ -27,16 +27,28 @@ export const getUser = async (req, res) => {
 
 export const showUserEvents = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).populate({ path: 'interestedEvents', populate: {path: 'creator', select: 'username _id'}});
-    const userCreatedEvents = await Event.find({ creator: req.user._id})
+    const user = await User.findById(req.user._id)
+      .populate({
+        path: "interestedEvents",             // ✅ This populates the events properly
+        populate: { 
+          path: "creator",                    // ✅ This matches your Event schema (creator is ref: "users")
+          select: "username _id"
+        }
+      });
 
-    // TBU: Add error handling
+    const userCreatedEvents = await Event.find({ creator: req.user._id });
 
-    res.json({user, userCreatedEvents});
+    res.json({ 
+      user: { 
+        interestedEvents: user.interestedEvents 
+      }, 
+      userCreatedEvents 
+    });
   } catch (error) {
+    console.error("Error fetching user events:", error);
     res.status(500).json({ err: error.message });
   }
-}
+};
 
 
 export const signUp = async (req, res) => {
@@ -98,30 +110,29 @@ export const signIn = async (req, res) => {
 export const interestedEvent = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
-    const interestedEvent = await Event.findById(req.params.eventId);
+    const event = await Event.findById(req.params.eventId);
 
-    if (!interestedEvent) {
+    if (!event) {
       return res.status(404).json({ error: "Event not found." });
     }
 
-    //  TBU: Refactor below - check if creator is the req user
-    // user.createdEvents.forEach( (event) => {
-    //   if(event.toString() === req.params.eventId){
-    //     return res.status(403).json({ error: "Cannot add an event you have created."})
-    //   }
-    // })
+    const isInterested = user.interestedEvents.some(
+      (e) => e.toString() === req.params.eventId
+    );
 
-    user.interestedEvents.forEach((event) => {
-      if (event.toString() === req.params.eventId) {
-        throw new Error("Already added this event.");
-      }
-    });
-
-    user.interestedEvents.push(interestedEvent._id);
-    await user.save();
-
-    res.status(200).json({ interestedEvent: interestedEvent });
+    if (isInterested) {
+      user.interestedEvents = user.interestedEvents.filter(
+        (e) => e.toString() !== req.params.eventId
+      );
+      await user.save();
+      return res.status(200).json({ message: "Removed from interested events." });
+    } else {
+      user.interestedEvents.push(event._id);
+      await user.save();
+      return res.status(200).json({ message: "Added to interested events." });
+    }
   } catch (error) {
+    console.error("Error toggling interested event:", error);
     res.status(500).json({ error: error.message });
   }
 };

@@ -15,4 +15,4 @@ eventSchema.set("toJSON", {
   }
 });
 
-export default mongoose.model("events", eventSchema);
+export default mongoose.model("Event", eventSchema);

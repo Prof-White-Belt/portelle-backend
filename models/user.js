@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   city: { type: String, required: true },
   interestedEvents: [{ 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: "events" 
+    ref: "Event" 
   }]
 });
 
