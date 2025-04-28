@@ -29,9 +29,9 @@ export const showUserEvents = async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
       .populate({
-        path: "interestedEvents",             // ✅ This populates the events properly
+        path: "interestedEvents",             
         populate: { 
-          path: "creator",                    // ✅ This matches your Event schema (creator is ref: "users")
+          path: "creator",                    
           select: "username _id"
         }
       });

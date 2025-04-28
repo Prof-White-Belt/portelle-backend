@@ -7,7 +7,7 @@ import "dotenv/config";
 
 const seedEvents = async () => {
   try {
-    await Event.deleteMany(); // Clear existing data
+    await Event.deleteMany(); 
     await User.deleteMany();
 
     const victoria = await User.create({
@@ -48,7 +48,7 @@ const seedEvents = async () => {
 
     console.log("✨ Events successfully seeded!");
   } catch (error) {
-    console.error("❌ Error seeding events:", error.message);
+    console.error(" Error seeding events:", error.message);
   } finally {
     db.close();
   }
